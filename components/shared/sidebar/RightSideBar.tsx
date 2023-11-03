@@ -7,27 +7,27 @@ import RenderTag from '../RenderTag';
 const RightSidebar = () => {
   const hotQuestions = [
     {
-      _id: 1,
+      _id: '1',
       title: 'How to use React Query?',
     },
-    { _id: 2, title: 'How to use nextjs' },
+    { _id: '2', title: 'How to use nextjs' },
     {
-      _id: 3,
+      _id: '3',
       title: 'Can i fix this soon?',
     },
     {
-      _id: 4,
+      _id: '4',
       title: 'Greatest placeholder alive',
     },
-    { _id: 5, title: 'Yes there!' },
+    { _id: '5', title: 'Yes there!' },
   ];
 
   const popularTags = [
-    { _id: 1, title: 'React', totalQuestions: 100 },
-    { _id: 2, title: 'Node.js', totalQuestions: 75 },
-    { _id: 3, title: 'JavaScript', totalQuestions: 200 },
-    { _id: 4, title: 'TypeScript', totalQuestions: 50 },
-    { _id: 5, title: 'CSS', totalQuestions: 150 },
+    { _id: '1', title: 'React', totalQuestions: 100 },
+    { _id: '2', title: 'Node.js', totalQuestions: 75 },
+    { _id: '3', title: 'JavaScript', totalQuestions: 200 },
+    { _id: '4', title: 'TypeScript', totalQuestions: 50 },
+    { _id: '5', title: 'CSS', totalQuestions: 150 },
   ];
 
   return (
