@@ -18,12 +18,12 @@ const questions = [
       { _id: 'tag2', name: 'Interfaces' },
     ],
     author: {
-      id: 'author1',
+      _id: 'author1',
       name: 'John Doe',
       picture: 'john-doe.jpg',
     },
-    upvotes: 10,
-    views: 200,
+    upvotes: 510000,
+    views: 2100000,
     answers: [{ answerId: 'answer1', text: 'You can use it like this...' }],
     createdAt: new Date('2023-11-02'),
   },
@@ -37,7 +37,7 @@ const questions = [
       { _id: 'tag4', name: 'Extending' },
     ],
     author: {
-      id: 'author2',
+      _id: 'author2',
       name: 'Alice Smith',
       picture: 'alice-smith.jpg',
     },
@@ -61,7 +61,7 @@ const questions = [
       { _id: 'tag5', name: 'Validation' },
     ],
     author: {
-      id: 'author1',
+      _id: 'author1',
       name: 'John Doe',
       picture: 'john-doe.jpg',
     },
@@ -80,7 +80,7 @@ const questions = [
       { _id: 'tag6', name: 'Naming' },
     ],
     author: {
-      id: 'author3',
+      _id: 'author3',
       name: 'Elena Ramirez',
       picture: 'elena-ramirez.jpg',
     },
@@ -99,7 +99,7 @@ const questions = [
       { _id: 'tag7', name: 'Optional' },
     ],
     author: {
-      id: 'author2',
+      _id: 'author2',
       name: 'Alice Smith',
       picture: 'alice-smith.jpg',
     },
