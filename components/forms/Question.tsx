@@ -18,6 +18,7 @@ import React, { useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { Badge } from '../ui/badge';
 import Image from 'next/image';
+import { createQuestion } from '@/lib/actions/question.action';
 
 const type: any = 'create';
 
@@ -34,10 +35,14 @@ const Question = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof QuestionsSchema>) {
+  async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     try {
-      console.log(values);
+      await createQuestion({
+        title: values.title,
+        explanation: values.explanation,
+        tags: values.tags,
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -91,7 +96,10 @@ const Question = () => {
                 Question Title<span className='text-primary-500'>*</span>
               </FormLabel>
               <FormControl className='mt-3.5'>
-                <Input className='no-focus paragraph-regular background-light700_dark300 light-border-2 text-dark300_light900 min-h-[56px] border' />
+                <Input
+                  {...field}
+                  className='no-focus paragraph-regular background-light700_dark300 light-border-2 text-dark300_light900 min-h-[56px] border'
+                />
               </FormControl>
               <FormDescription className='body-regular mt-2.5 text-light-500'>
                 Ask your developer question. Be specific and relevant.
@@ -115,6 +123,10 @@ const Question = () => {
                   onInit={(evt, editor) => {
                     // @ts-ignore
                     editorRef.current = editor;
+                  }}
+                  onBlur={field.onBlur}
+                  onEditorChange={(content) => {
+                    field.onChange(content);
                   }}
                   initialValue=''
                   init={{
