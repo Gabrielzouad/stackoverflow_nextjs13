@@ -13,8 +13,11 @@ export const connectToDatabase = async () => {
   }
   
   try {
-    await mongoose.connect(process.env.MONGODB_URL, { dbName:"devOverFlow"});
-  isConnected = true;
+    await mongoose.connect(process.env.MONGODB_URL, 
+      { dbName:"devOverFlow"})
+
+      isConnected = true;
+      console.log('=> using new database connection')
   } catch (error) {
     console.log('=> error while connecting with database:', error);
   }

@@ -19,10 +19,17 @@ import { Editor } from '@tinymce/tinymce-react';
 import { Badge } from '../ui/badge';
 import Image from 'next/image';
 import { createQuestion } from '@/lib/actions/question.action';
+import { useRouter, usePathname } from 'next/navigation';
 
 const type: any = 'create';
 
-const Question = () => {
+interface QuestionProps {
+  mongoUserId: string;
+}
+
+const Question = ({ mongoUserId }: QuestionProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,9 +47,12 @@ const Question = () => {
     try {
       await createQuestion({
         title: values.title,
-        explanation: values.explanation,
+        content: values.explanation,
         tags: values.tags,
+        author: JSON.parse(mongoUserId),
+        path: pathname,
       });
+      router.push('/');
     } catch (error) {
       console.log(error);
     } finally {
