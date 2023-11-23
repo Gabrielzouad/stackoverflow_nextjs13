@@ -47,7 +47,7 @@ const page = async ({ params }: { params: { id: string } }) => {
               downvotes={result.downvotes.length}
               hasupVoted={result.upvotes.includes(mongoUser._id)}
               hasdownVoted={result.downvotes.includes(mongoUser._id)}
-              hasSaved={mongoUser?.saves?.includes(result._id)}
+              hasSaved={mongoUser?.saved.includes(result._id)}
             />
           </div>
         </div>
@@ -94,7 +94,7 @@ const page = async ({ params }: { params: { id: string } }) => {
 
       <AllAnswers
         questionId={result._id}
-        userId={JSON.stringify(mongoUser._id)}
+        userId={mongoUser._id}
         totalAnswers={result.answers.lenght}
       />
 

@@ -1,12 +1,15 @@
 'use client';
+import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
+import { viewQuestion } from '@/lib/actions/interaction.action';
 import {
   downvoteQuestion,
+  toggleSaveQuestion,
   upvoteQuestion,
 } from '@/lib/actions/question.action';
 import { formatNumberToK } from '@/lib/utils';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import React from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 
 interface Props {
   type: string;
@@ -30,14 +33,14 @@ const Votes = ({
   hasSaved,
 }: Props) => {
   const pathname = usePathname();
-  // const router = useRouter();
+  const router = useRouter();
 
-  const handleSave = () => {
-    if (hasSaved) {
-      // remove save
-    } else {
-      // add save
-    }
+  const handleSave = async () => {
+    await toggleSaveQuestion({
+      questionId: JSON.parse(itemId),
+      userId: JSON.parse(userId),
+      path: pathname,
+    });
   };
 
   const handleVote = async (action: string) => {
@@ -54,13 +57,13 @@ const Votes = ({
           path: pathname,
         });
       } else if (type === 'Answer') {
-        // await upvoteAnswer({
-        //     questionId: JSON.parse(itemId),
-        //     userId: JSON.parse(userId),
-        //     hasupVoted,
-        //     hasdownVoted,
-        //     path: pathname,
-        //   });
+        await upvoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted,
+          hasdownVoted,
+          path: pathname,
+        });
       }
       // TODO show toast
     }
@@ -74,17 +77,24 @@ const Votes = ({
           path: pathname,
         });
       } else if (type === 'Answer') {
-        // await downvoteAnswer({
-        //     questionId: JSON.parse(itemId),
-        //     userId: JSON.parse(userId),
-        //     hasupVoted,
-        //     hasdownVoted,
-        //     path: pathname,
-        //   });
+        await downvoteAnswer({
+          answerId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted,
+          hasdownVoted,
+          path: pathname,
+        });
       }
       // TODO show toast
     }
   };
+
+  useEffect(() => {
+    viewQuestion({
+      questionId: JSON.parse(itemId),
+      userId: userId ? JSON.parse(userId) : undefined,
+    });
+  }, [itemId, userId, pathname, router]);
 
   return (
     <div className='flex gap-5'>
@@ -130,20 +140,24 @@ const Votes = ({
           </div>
         </div>
       </div>
-      <Image
-        src={
-          hasSaved
-            ? '/assets/icons/star-filled.svg'
-            : '/assets/icons/star-red.svg'
-        }
-        width={18}
-        height={18}
-        alt='star'
-        className='cursor-pointer'
-        onClick={() => handleVote('upvote')}
-      />
+      {type === 'Question' && (
+        <Image
+          src={
+            hasSaved
+              ? '/assets/icons/star-filled.svg'
+              : '/assets/icons/star-red.svg'
+          }
+          width={18}
+          height={18}
+          alt='star'
+          className='cursor-pointer'
+          onClick={handleSave}
+        />
+      )}
     </div>
   );
 };
 
 export default Votes;
+
+// TODO fix positing of votes
