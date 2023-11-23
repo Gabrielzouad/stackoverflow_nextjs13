@@ -1,15 +1,24 @@
 import Answer from '@/components/forms/Answer';
+import AllAnswers from '@/components/shared/AllAnswers';
 import Metric from '@/components/shared/Metric';
 import ParseHTML from '@/components/shared/ParseHTML';
 import RenderTag from '@/components/shared/RenderTag';
+import Votes from '@/components/shared/Votes';
 import { getQuestionByID } from '@/lib/actions/question.action';
+import { getUserByID } from '@/lib/actions/user.action';
 import { formatNumberToK, getTimestamp } from '@/lib/utils';
+import { auth } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 const page = async ({ params }: { params: { id: string } }) => {
   const result = await getQuestionByID({ questionId: params.id });
+  const { userId: clerkId } = auth();
+  let mongoUser;
+  if (clerkId) {
+    mongoUser = await getUserByID({ userId: clerkId });
+  }
   return (
     <>
       <div className='flex-start w-full flex-col'>
@@ -29,7 +38,18 @@ const page = async ({ params }: { params: { id: string } }) => {
               {result.author.name}
             </p>
           </Link>
-          <div className='flex justify-end'>VOTING</div>
+          <div className='flex justify-end'>
+            <Votes
+              type='Question'
+              itemId={JSON.stringify(result._id)}
+              userId={JSON.stringify(mongoUser._id)}
+              upvotes={result.upvotes.length}
+              downvotes={result.downvotes.length}
+              hasupVoted={result.upvotes.includes(mongoUser._id)}
+              hasdownVoted={result.downvotes.includes(mongoUser._id)}
+              hasSaved={mongoUser?.saves?.includes(result._id)}
+            />
+          </div>
         </div>
         <h2 className='h2-semibold text-dark200_light900 mt-3.5 w-full text-left'>
           {result.title}
@@ -71,7 +91,18 @@ const page = async ({ params }: { params: { id: string } }) => {
           />
         ))}
       </div>
-      <Answer />
+
+      <AllAnswers
+        questionId={result._id}
+        userId={JSON.stringify(mongoUser._id)}
+        totalAnswers={result.answers.lenght}
+      />
+
+      <Answer
+        question={result.content}
+        questionId={JSON.stringify(result._id)}
+        authorId={JSON.stringify(mongoUser._id)}
+      />
     </>
   );
 };
