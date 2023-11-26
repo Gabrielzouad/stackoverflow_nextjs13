@@ -40,3 +40,16 @@ export const formatNumberToK = (value: number): string => {
   return (value / 1000000).toFixed(1) + 'M';
 };
 
+
+export const joinDateWithMonthAndYear = (dateObj: Date): string  => {
+  const months: string[] = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const year: number = dateObj.getFullYear();
+  const month: string = months[dateObj.getMonth()];
+  const day: number = dateObj.getDate();
+
+  return `${month} ${day}, ${year}`;
+}
