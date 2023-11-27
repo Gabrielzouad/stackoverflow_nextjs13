@@ -9,9 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { joinDateWithMonthAndYear } from '@/lib/utils';
 import ProfileLink from '@/components/shared/ProfileLink';
 import Stats from '@/components/shared/Stats';
+import QuestionTab from '@/components/shared/QuestionTab';
+import AnswersTab from '@/components/shared/AnswersTab';
 
 const page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
+  if (!clerkId) return 'no user found';
   const userinfo = await getUserInfo({ userId: params.id });
   return (
     <>
@@ -75,14 +78,26 @@ const page = async ({ params, searchParams }: URLProps) => {
         <Tabs defaultValue='Top-posts' className='flex-1'>
           <TabsList className='background-light800_dark400 min-h-[42px] p-1'>
             <TabsTrigger value='top-posts' className='tab'>
-              Top Posts
+              Questions
             </TabsTrigger>
             <TabsTrigger value='answers' className='tab'>
               Answers
             </TabsTrigger>
           </TabsList>
-          <TabsContent value='top-posts'>Posts</TabsContent>
-          <TabsContent value='answers'>Answers</TabsContent>
+          <TabsContent value='top-posts'>
+            <QuestionTab
+              searchParams={searchParams}
+              userId={userinfo.user._id}
+              clerkId={clerkId}
+            />
+          </TabsContent>
+          <TabsContent value='answers'>
+            <AnswersTab
+              searchParams={searchParams}
+              userId={userinfo.user._id}
+              clerkId={clerkId}
+            />
+          </TabsContent>
         </Tabs>
       </div>
     </>
