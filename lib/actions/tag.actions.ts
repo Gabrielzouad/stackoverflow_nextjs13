@@ -40,4 +40,22 @@ export async function getTags(params: GetAllTagsParams){
         throw new Error("Error getting questions")
     }
 }
+
+export async function getTopPopularTags(){
+    try{
+        connectToDatabase()
+
+        const popularTags = await Tag.aggregate([
+            { $project: { name: 1, count: { $size: "$questions" } } },
+            { $sort: { count: -1 } },
+            { $limit: 5 } ])
+
+        return { popularTags }
+    }
+    catch(e){
+        console.log(e)
+        throw new Error("Error getting questions")
+    }
+}
+  
   

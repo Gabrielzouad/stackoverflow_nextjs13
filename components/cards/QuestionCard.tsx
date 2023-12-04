@@ -3,6 +3,8 @@ import React from 'react';
 import RenderTag from '../shared/RenderTag';
 import Metric from '../shared/Metric';
 import { getTimestamp, formatNumberToK } from '@/lib/utils';
+import { SignedIn } from '@clerk/nextjs';
+import EditDeleteAction from '../shared/EditDeleteAction';
 
 interface QuestionCardProps {
   _id: string;
@@ -12,6 +14,7 @@ interface QuestionCardProps {
     name: string;
   }[];
   author: {
+    clerkId: string;
     _id: string;
     name: string;
     picture: string;
@@ -34,6 +37,7 @@ const QuestionCard = ({
   createdAt,
   clerkId,
 }: QuestionCardProps) => {
+  const showActionButtons = clerkId && clerkId === author.clerkId;
   return (
     <div className='card-wrapper rounded-[10px] p-9 sm:px-11'>
       <div className='flex flex-col-reverse items-start justify-between gap-5 sm:flex-row'>
@@ -47,7 +51,11 @@ const QuestionCard = ({
             </h3>
           </Link>
         </div>
-        {/* if signed in add edit delete actions */}
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction type='Question' itemId={JSON.stringify(_id)} />
+          )}
+        </SignedIn>
       </div>
       <div className='mt-3.5 flex flex-wrap gap-2 '>
         {tags.map((tag) => (
@@ -55,17 +63,16 @@ const QuestionCard = ({
         ))}
       </div>
       <div className='flex-between mt-6 w-full flex-wrap gap-3'>
-        {
-          <Metric
-            imgUrl={author.picture}
-            alt='Avatar'
-            value={author.name}
-            title={` - asked ${getTimestamp(createdAt)}`}
-            href={`/profile/${author._id}`}
-            textStyles='body-medium text-dark400_light700'
-            isAuthor={!!author._id}
-          />
-        }
+        <Metric
+          imgUrl={author.picture}
+          alt='Avatar'
+          value={author.name}
+          title={` - asked ${getTimestamp(createdAt)}`}
+          href={`/profile/${author._id}`}
+          textStyles='body-medium text-dark400_light700'
+          isAuthor={!!author._id}
+        />
+
         <Metric
           imgUrl='/assets/icons/like.svg'
           alt='upvotes'

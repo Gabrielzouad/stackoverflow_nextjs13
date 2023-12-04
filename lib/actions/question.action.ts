@@ -4,9 +4,11 @@ import Question from "../database/question.model"
 import Tag, { ITag } from "../database/tag.model"
 import { connectToDatabase } from "../mongoose"
 import { revalidatePath } from "next/cache";
-import { CreateQuestionParams, GetQuestionByIdParams, GetQuestionsByTagIdParams, GetQuestionsParams, QuestionVoteParams, ToggleSaveQuestionParams } from "./shared.types";
+import { CreateQuestionParams, DeleteQuestionParams, EditQuestionParams, GetQuestionByIdParams, GetQuestionsByTagIdParams, GetQuestionsParams, QuestionVoteParams, ToggleSaveQuestionParams } from "./shared.types";
 import User from "../database/user.model";
 import { FilterQuery } from "mongoose";
+import Answer from "../database/answer.model";
+import Interaction from "../database/interaction.model";
 
 export async function getQuestions(params: GetQuestionsParams){
     try{
@@ -212,3 +214,59 @@ export async function getQuestionsByTag(params: GetQuestionsByTagIdParams) {
   throw error;
 }
 }
+
+
+export async function deleteQuestion(params: DeleteQuestionParams){
+  try{
+    connectToDatabase()
+    const { questionId, path } = params
+
+    await Question.deleteOne({ _id: questionId })
+    await Answer.deleteMany({ question: questionId })
+    await Interaction.deleteMany({ question: questionId })
+    await Tag.updateMany({ questions: questionId }, { $pull: { questions: questionId }})
+
+    revalidatePath(path)
+
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function editQuestion(params: EditQuestionParams){
+  try{
+    connectToDatabase()
+    const { questionId, title, content, path } = params
+    
+    const question = await Question.findById(questionId).populate("tags")
+
+    if(!question){
+      throw new Error("Question not found")
+    }
+    question.title = title
+    question.content = content
+
+    await question.save()
+    
+    revalidatePath(path)
+  }catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getHotQuestions (params: GetQuestionsParams){
+  try{
+    connectToDatabase()
+    const questions = await Question.find({})
+    .sort({views: -1, upvotes: -1})
+    .limit(5)
+
+    return { questions }
+  }catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+

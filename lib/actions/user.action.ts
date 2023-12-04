@@ -168,3 +168,22 @@ export async function getUserStats(params: GetUserStatsParams) {
     throw error;
   }
 }
+
+export async function getUserAnswers(params: GetUserStatsParams) {
+  try {
+    const { userId, page = 1, pageSize = 10 } = params;
+
+    const totalAnswers = await Answer.countDocuments({ author: userId})
+
+    const userAnswers = await Answer.find({ author: userId}).sort({ upvotes: -1})
+    .populate("author", "_id clerkId name picture")
+    .populate("question", "_id title")
+
+    return { totalAnswers, answers: userAnswers };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+
