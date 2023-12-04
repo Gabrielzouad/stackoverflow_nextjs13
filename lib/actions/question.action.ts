@@ -14,7 +14,18 @@ export async function getQuestions(params: GetQuestionsParams){
     try{
         connectToDatabase()
 
-        const questions = await Question.find({})
+        const { searchQuery } = params
+
+        const query: FilterQuery<typeof Question> = {}
+
+        if(searchQuery){
+          query.$or = [
+            { title: { $regex: new RegExp(searchQuery, "i" )}},
+            { content: { $regex: new RegExp(searchQuery, "i" )}}
+          ]
+        }
+
+        const questions = await Question.find(query)
         .populate({path: "tags", model: Tag})
         .populate({path: "author", model: User})
         .sort({createdAt: -1})
@@ -191,7 +202,7 @@ export async function getQuestionsByTag(params: GetQuestionsByTagIdParams) {
       path: "questions",
       model: Question,
       match: searchQuery 
-      ? { title : { $regex: searchQuery, $option: "i"}} 
+      ? { title : { $regex: searchQuery, $options: "i"}} 
       : {},
       options: { 
         sort: { createdAt: -1 } 

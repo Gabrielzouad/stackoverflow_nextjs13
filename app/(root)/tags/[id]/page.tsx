@@ -7,22 +7,22 @@ import { URLProps } from '@/types';
 export default async function Home({ params, searchParams }: URLProps) {
   const result = await getQuestionsByTag({
     tagId: params.id,
-    page: 1,
+    page: searchParams.page ? +searchParams.page : 1,
     searchQuery: searchParams.q,
   });
 
   return (
     <>
       <h1 className='h1-bold text-dark100_light900'>
-        {result.tagTitle.charAt(0).toUpperCase() + result.tagTitle.slice(1)}{' '}
+        {result.tagTitle.charAt(0).toUpperCase() + result.tagTitle.slice(1)}
         Questions
       </h1>
       <div className='mt-11 w-full'>
         <LocalSearchBar
-          route='/'
+          route={`/tags/${params.id}`}
           iconPosition='left'
           imgSrc='/assets/icons/search.svg'
-          placeholder='Search for Questions'
+          placeholder='Search tag questions'
           otherClasses='flex-1'
         />
       </div>
