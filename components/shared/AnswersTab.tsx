@@ -8,8 +8,8 @@ interface Props extends SearchParamsProps {
   clerkId?: string | null;
 }
 
-const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
-  const result = await getUserAnswers({ userId, searchParams, clerkId });
+const AnswersTab = async ({ userId, clerkId }: Props) => {
+  const result = await getUserAnswers({ userId });
   return (
     <>
       {result.answers.map((answer) => (
