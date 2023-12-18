@@ -3,6 +3,7 @@ import NoResult from '@/components/shared/NoResult';
 import QuestionCard from '@/components/cards/QuestionCard';
 import { getQuestionsByTag } from '@/lib/actions/question.action';
 import { URLProps } from '@/types';
+import Pagination from '@/components/shared/Pagination';
 
 export default async function Home({ params, searchParams }: URLProps) {
   const result = await getQuestionsByTag({
@@ -52,6 +53,10 @@ export default async function Home({ params, searchParams }: URLProps) {
           />
         )}
       </div>
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
     </>
   );
 }

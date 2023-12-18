@@ -7,12 +7,13 @@ import Votes from '@/components/shared/Votes';
 import { getQuestionByID } from '@/lib/actions/question.action';
 import { getUserByID } from '@/lib/actions/user.action';
 import { formatNumberToK, getTimestamp } from '@/lib/utils';
+import { URLProps } from '@/types';
 import { auth } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
-const page = async ({ params }: { params: { id: string } }) => {
+const page = async ({ params, searchParams }: URLProps) => {
   const result = await getQuestionByID({ questionId: params.id });
   const { userId: clerkId } = auth();
   let mongoUser;
@@ -96,6 +97,8 @@ const page = async ({ params }: { params: { id: string } }) => {
         questionId={result._id}
         userId={mongoUser._id}
         totalAnswers={result.answers.lenght}
+        page={searchParams?.page}
+        filter={searchParams?.filter}
       />
 
       <Answer

@@ -7,6 +7,7 @@ import QuestionCard from '@/components/cards/QuestionCard';
 import { auth } from '@clerk/nextjs';
 import { getSavedQuestions } from '@/lib/actions/user.action';
 import { SearchParamsProps } from '@/types';
+import Pagination from '@/components/shared/Pagination';
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
@@ -14,6 +15,8 @@ export default async function Home({ searchParams }: SearchParamsProps) {
   const result = await getSavedQuestions({
     clerkId: userId,
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
   return (
     <>
@@ -29,7 +32,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         <Filter
           filters={QuestionFilters}
           otherClasses='min-h-[56px] sm:min-w-[170px]'
-          containerClasses='hidden mx-md:flex'
+          containerClasses=' mx-md:flex'
         />
       </div>
       <HomeFilters />
@@ -59,6 +62,10 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           />
         )}
       </div>
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
     </>
   );
 }
