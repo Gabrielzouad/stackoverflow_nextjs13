@@ -1,23 +1,17 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import GlobalFilters from './GlobalFilters';
+import { globalSearch } from '@/lib/actions/general.action';
 
 const GlobalResult = () => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState([
-    {
-      type: 'question',
-      id: '1',
-      title: 'title',
-      description: 'description',
-      tags: ['tag1', 'tag2'],
-    },
-  ]);
+  const [result, setResult] = useState([]);
 
   const global = searchParams.get('global');
   const type = searchParams.get('type');
@@ -27,7 +21,8 @@ const GlobalResult = () => {
       setResult([]);
       setIsLoading(true);
       try {
-        // fetch all data
+        const res = await globalSearch({ query: global, type });
+        setResult(JSON.parse(res as string));
       } catch {
         console.log('error');
         throw new Error('error');
@@ -35,10 +30,24 @@ const GlobalResult = () => {
         setIsLoading(false);
       }
     };
+    if (global) {
+      fetchResult();
+    }
   }, [global, type]);
 
   const renderLink = (type: string, id: string) => {
-    return '/';
+    switch (type) {
+      case 'question':
+        return `/question/${id}`;
+      case 'answer':
+        return `/question/${id}`;
+      case 'tag':
+        return `/tags/${id}`;
+      case 'user':
+        return `/profile/${id}`;
+      default:
+        return '/';
+    }
   };
   return (
     <div className='absolute top-full z-10 mt-3 w-full rounded-xl bg-light-800 py-5 shadow-sm dark:bg-dark-400'>
@@ -60,7 +69,7 @@ const GlobalResult = () => {
             {result.length > 0 ? (
               result.map((item: any, index: number) => (
                 <Link
-                  href={renderLink('type', 'id')}
+                  href={renderLink(item.type, item.id)}
                   key={item.type + item.id + index}
                   className='flex w-full cursor-pointer items-start gap-3 px-5 py-2.5 hover:bg-light-700/50 dark:hover:bg-dark-500/50'
                 >
