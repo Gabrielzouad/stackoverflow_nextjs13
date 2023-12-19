@@ -55,7 +55,7 @@ const page = async ({ params, searchParams }: URLProps) => {
               />
             </div>
             {userinfo.user.bio && (
-              <p className='paragraph-regular text-dark400_light800 mt-8'>
+              <p className='paragraph-regular text-dark400_light800 mt-4 '>
                 {userinfo.user.bio}
               </p>
             )}
