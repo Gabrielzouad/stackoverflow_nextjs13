@@ -1,7 +1,7 @@
 import Filter from '@/components/shared/Filter';
 import LocalSearchBar from '@/components/shared/search/LocalSearchBar';
 import { QuestionFilters } from '@/constants/filters';
-import HomeFilters from '@/components/shared/home/HomeFilters';
+
 import NoResult from '@/components/shared/NoResult';
 import QuestionCard from '@/components/cards/QuestionCard';
 import { auth } from '@clerk/nextjs';
@@ -35,7 +35,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           containerClasses=' mx-md:flex'
         />
       </div>
-      <HomeFilters />
+
       <div className='mt-10 flex w-full flex-col gap-6'>
         {result.questions.length > 0 ? (
           result.questions.map((question: any) => (

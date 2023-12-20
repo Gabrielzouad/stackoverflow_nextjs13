@@ -109,3 +109,16 @@ export const assignBadges = (params: BadgeParam) => {
   })
   return badgeCounts
 }
+
+export async function getJobs() {
+  const headers = {
+		'X-RapidAPI-Key': '5dcca6264fmsh274146a7c747b93p171508jsn6c2c3897c038',
+		'X-RapidAPI-Host': 'jsearch.p.rapidapi.com'
+	}
+  const response = await fetch("https://jsearch.p.rapidapi.com/search?query=Developer%2C%20Norway&page=1&num_pages=1&country=no",{
+    headers,
+  })
+  const result = await response.json()
+
+  return result
+}
