@@ -96,11 +96,11 @@ const Votes = ({
         });
       }
       return toast({
-        title: `Downvote ${!hasupVoted ? 'added' : 'removed'}`,
+        title: `Downvote ${!hasdownVoted ? 'added' : 'removed'}`,
         description: `Downvote has been successfully ${
-          !hasupVoted ? 'added' : 'removed'
+          !hasdownVoted ? 'added' : 'removed'
         }`,
-        variant: !hasupVoted ? 'default' : 'destructive',
+        variant: !hasdownVoted ? 'default' : 'destructive',
       });
     }
   };

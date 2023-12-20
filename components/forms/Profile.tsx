@@ -78,14 +78,14 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name='name'
           render={({ field }) => (
             <FormItem className='space-y-3.5'>
-              <FormLabel>
+              <FormLabel className='paragraph-semibold text-dark400_light800'>
                 Name<span className='text-primary-500'>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder='Your name'
                   {...field}
-                  className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px]'
+                  className='no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px]'
                 />
               </FormControl>
               <FormMessage />
@@ -97,14 +97,14 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name='username'
           render={({ field }) => (
             <FormItem className='space-y-3.5'>
-              <FormLabel>
+              <FormLabel className='paragraph-semibold text-dark400_light800'>
                 Username<span className='text-primary-500'>*</span>
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder='Your username'
                   {...field}
-                  className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px]'
+                  className='no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px]'
                 />
               </FormControl>
               <FormMessage />
@@ -116,13 +116,15 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name='portfolioWebsite'
           render={({ field }) => (
             <FormItem className='space-y-3.5'>
-              <FormLabel>Portfolio Link</FormLabel>
+              <FormLabel className='paragraph-semibold text-dark400_light800'>
+                Portfolio Link
+              </FormLabel>
               <FormControl>
                 <Input
                   type='url'
                   placeholder='Your Portfolio Link'
                   {...field}
-                  className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px]'
+                  className='no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px]'
                 />
               </FormControl>
               <FormMessage />
@@ -134,12 +136,14 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name='location'
           render={({ field }) => (
             <FormItem className='space-y-3.5'>
-              <FormLabel>Location</FormLabel>
+              <FormLabel className='paragraph-semibold text-dark400_light800'>
+                Location
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder='Where are you from?'
                   {...field}
-                  className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px]'
+                  className='no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px]'
                 />
               </FormControl>
               <FormMessage />
@@ -151,14 +155,14 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name='bio'
           render={({ field }) => (
             <FormItem className='space-y-3.5'>
-              <FormLabel>
+              <FormLabel className='paragraph-semibold text-dark400_light800'>
                 Bio<span className='text-primary-500'>*</span>
               </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder='Tell us about yourself'
                   {...field}
-                  className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px]'
+                  className='no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] overflow-hidden'
                 />
               </FormControl>
               <FormMessage />
@@ -168,7 +172,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
         <div className='mt-7 flex justify-end'>
           <Button
             type='submit'
-            className='primary-gradient w-fit'
+            className='text-dark300_light700 w-fit bg-primary-500'
             disabled={isSubmitting}
           >
             {isSubmitting ? 'Saving...' : 'Save'}
