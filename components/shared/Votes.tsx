@@ -10,6 +10,7 @@ import { formatNumberToK } from '@/lib/utils';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
+import { toast } from '../ui/use-toast';
 
 interface Props {
   type: string;
@@ -45,7 +46,10 @@ const Votes = ({
 
   const handleVote = async (action: string) => {
     if (!userId) {
-      return;
+      return toast({
+        title: 'You need to be logged in to vote',
+        variant: 'default',
+      });
     }
     if (action === 'upvote') {
       if (type === 'Question') {
@@ -65,7 +69,13 @@ const Votes = ({
           path: pathname,
         });
       }
-      // TODO show toast
+      return toast({
+        title: `Upvote ${!hasupVoted ? 'added' : 'removed'}`,
+        description: `Upvote has been successfully ${
+          !hasupVoted ? 'added' : 'removed'
+        }`,
+        variant: !hasupVoted ? 'default' : 'destructive',
+      });
     }
     if (action === 'downvote') {
       if (type === 'Question') {
@@ -85,7 +95,13 @@ const Votes = ({
           path: pathname,
         });
       }
-      // TODO show toast
+      return toast({
+        title: `Downvote ${!hasupVoted ? 'added' : 'removed'}`,
+        description: `Downvote has been successfully ${
+          !hasupVoted ? 'added' : 'removed'
+        }`,
+        variant: !hasupVoted ? 'default' : 'destructive',
+      });
     }
   };
 
@@ -159,5 +175,3 @@ const Votes = ({
 };
 
 export default Votes;
-
-// TODO fix positing of votes

@@ -17,6 +17,7 @@ import { Button } from '../ui/button';
 import Image from 'next/image';
 import { createAnswer } from '@/lib/actions/answer.action';
 import { usePathname } from 'next/navigation';
+import { useToast } from '../ui/use-toast';
 
 interface Props {
   question: string;
@@ -29,6 +30,8 @@ const Answer = ({ question, questionId, authorId }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmittingAI, setIsSubmittingAI] = useState(false);
   const { mode } = useTheme();
+  const { toast } = useToast();
+
   const editorRef = useRef(null);
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -50,6 +53,10 @@ const Answer = ({ question, questionId, authorId }: Props) => {
         const editor = editorRef.current as any;
         editor.setContent('');
       }
+      toast({
+        title: 'success',
+        description: 'Answer created successfully',
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -85,7 +92,10 @@ const Answer = ({ question, questionId, authorId }: Props) => {
         editor.setContent(formattedAnswer);
       }
 
-      // toast...
+      toast({
+        title: 'AI answer generated',
+        description: 'AI answer has been successfully generated',
+      });
     } catch (error) {
       console.error('Error fetching AI response:', error);
     } finally {

@@ -21,6 +21,7 @@ import Image from 'next/image';
 import { createQuestion, editQuestion } from '@/lib/actions/question.action';
 import { useRouter, usePathname } from 'next/navigation';
 import { useTheme } from '@/context/ThemeProvider';
+import { toast } from '../ui/use-toast';
 
 interface QuestionProps {
   mongoUserId: string;
@@ -34,7 +35,6 @@ const Question = ({ type, mongoUserId, questionDetails }: QuestionProps) => {
   const pathname = usePathname();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const parsedQuestionDetails =
     questionDetails && JSON.parse(questionDetails || '');
   const parsedTags = parsedQuestionDetails?.tags.map((tag: any) => tag.name);
@@ -70,6 +70,11 @@ const Question = ({ type, mongoUserId, questionDetails }: QuestionProps) => {
         });
         router.push('/');
       }
+      return toast({
+        title: 'Post was successful',
+        description: 'Your question has been posted',
+        variant: 'default',
+      });
     } catch (error) {
       console.log(error);
     } finally {
