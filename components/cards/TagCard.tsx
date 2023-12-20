@@ -14,7 +14,7 @@ const TagCard = async ({ tag }: TagCardProps) => {
   return (
     <Link
       className='shadow-light100_darknone w-full max-xs:min-w-full xs:w-[260px]'
-      href={`/tag/${tag._id}`}
+      href={`/tags/${tag._id}`}
     >
       <article className='background-light900_dark200 light-border flex w-full flex-col rounded-2xl border p-8'>
         <div className='background-light800_dark400 w-fit rounded-sm px-5 py-1.5'>

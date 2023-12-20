@@ -1,5 +1,8 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import qs from "query-string"
+import { BADGE_CRITERIA } from "@/constants";
+import { BadgeCounts } from "@/types";
  
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -40,3 +43,82 @@ export const formatNumberToK = (value: number): string => {
   return (value / 1000000).toFixed(1) + 'M';
 };
 
+
+export const joinDateWithMonthAndYear = (dateObj: Date): string  => {
+  const months: string[] = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const year: number = dateObj.getFullYear();
+  const month: string = months[dateObj.getMonth()];
+  const day: number = dateObj.getDate();
+
+  return `${month} ${day}, ${year}`;
+}
+
+interface urlQueryParams{
+  params: string;
+  key: string;
+  value: string | null;
+}
+
+export const formUrlQuery = ({ params, key, value}: urlQueryParams) => {
+  const currentUrl = qs.parse(params)
+  currentUrl[key] = value
+  return qs.stringifyUrl({ url: window.location.pathname, query: currentUrl }, { skipNull: true })
+}
+
+interface removeUrlQueryParams{
+  params: string;
+  keysToRemove: string[]
+}
+
+export const removeKeysFromQuery = ({ params, keysToRemove }: removeUrlQueryParams) => {
+  const currentUrl = qs.parse(params)
+  keysToRemove.forEach((key) => {
+    delete currentUrl[key]
+  })
+  return qs.stringifyUrl({ url: window.location.pathname, query: currentUrl }, { skipNull: true })
+}
+
+interface BadgeParam{
+  criteria: {
+    type: keyof typeof BADGE_CRITERIA;
+    count: number;
+  }[];
+}
+
+export const assignBadges = (params: BadgeParam) => {
+  const badgeCounts: BadgeCounts = {
+    BRONZE: 0,
+    SILVER: 0,
+    GOLD: 0, 
+  }
+  const { criteria } = params
+
+  criteria.forEach((criterion) => {
+    const { type, count } = criterion
+    const badgeCriteria: any = BADGE_CRITERIA[type]
+
+   Object.keys(badgeCriteria).forEach((level: any) => {
+    if (count >= badgeCriteria[level]) {
+      badgeCounts[level as keyof BadgeCounts] += 1
+    }
+  })
+  })
+  return badgeCounts
+}
+
+export async function getJobs() {
+  const headers = {
+		'X-RapidAPI-Key': '5dcca6264fmsh274146a7c747b93p171508jsn6c2c3897c038',
+		'X-RapidAPI-Host': 'jsearch.p.rapidapi.com'
+	}
+  const response = await fetch("https://jsearch.p.rapidapi.com/search?query=Developer%2C%20Norway&page=1&num_pages=1&country=no",{
+    headers,
+  })
+  const result = await response.json()
+
+  return result
+}

@@ -6,10 +6,38 @@ import { HomePageFilters } from '@/constants/filters';
 import HomeFilters from '@/components/shared/home/HomeFilters';
 import NoResult from '@/components/shared/NoResult';
 import QuestionCard from '@/components/cards/QuestionCard';
-import { getQuestions } from '@/lib/actions/question.action';
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from '@/lib/actions/question.action';
+import { SearchParamsProps } from '@/types';
+import Pagination from '@/components/shared/Pagination';
+import { auth } from '@clerk/nextjs';
 
-export default async function Home() {
-  const result = await getQuestions({});
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const { userId } = auth();
+
+  let result;
+  if (searchParams?.filter === 'recommended') {
+    if (userId) {
+      result = await getRecommendedQuestions({
+        searchQuery: searchParams.q,
+        page: searchParams.page ? +searchParams.page : 1,
+        userId,
+      });
+    } else {
+      result = {
+        questions: [],
+        isNext: false,
+      };
+    }
+  } else
+    result = await getQuestions({
+      searchQuery: searchParams.q,
+      filter: searchParams.filter,
+      page: searchParams.page ? +searchParams.page : 1,
+    });
+
   return (
     <>
       <div className='flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center'>
@@ -61,6 +89,10 @@ export default async function Home() {
           />
         )}
       </div>
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
     </>
   );
 }

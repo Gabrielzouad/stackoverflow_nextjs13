@@ -1,18 +1,24 @@
 import TagCard from '@/components/cards/TagCard';
 import Filter from '@/components/shared/Filter';
+import Pagination from '@/components/shared/Pagination';
 import LocalSearchBar from '@/components/shared/search/LocalSearchBar';
 import { TagFilters } from '@/constants/filters';
 import { getTags } from '@/lib/actions/tag.actions';
+import { SearchParamsProps } from '@/types';
 import React from 'react';
 
-const Tags = async () => {
-  const result = await getTags({});
+const Tags = async ({ searchParams }: SearchParamsProps) => {
+  const result = await getTags({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
+  });
   return (
     <>
       <h1 className='h1-bold text-dark100_light900'>All Users</h1>
       <div className='mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center'>
         <LocalSearchBar
-          route='/community'
+          route='/tags'
           iconPosition='left'
           imgSrc='assets/icons/search.svg'
           placeholder='Search for tags'
@@ -31,6 +37,10 @@ const Tags = async () => {
           <p className='body-regular text-dark200_light900'>No Tags found</p>
         )}
       </section>
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
     </>
   );
 };
